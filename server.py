@@ -3,11 +3,11 @@ import os
 import csv
 
 app = Flask(__name__)
-print(__name__)
 
 @app.route("/")
 def my_home():
-    return render_template('index.html')
+    positions = ['Web Developer', 'Python Developer', 'Database Administrator']
+    return render_template('index.html', positions=positions)
 
 @app.route("/<string:page_name>")
 def html_page(page_name):
@@ -41,4 +41,8 @@ def submit_form():
     else:
         return 'something went wrong, try again'
 
+
+if __name__ == "__main__":
+    #app.run(Debug=True)
+    print(app)
 
