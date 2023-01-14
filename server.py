@@ -1,13 +1,15 @@
 from flask import Flask, render_template, request, redirect
 import os
 import csv
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.sqlite"
+db = SQLAlchemy(app)
 
 @app.route("/")
 def my_home():
-    positions = ['Web Developer', 'Python Developer', 'Database Administrator']
-    return render_template('index.html', positions=positions)
+    return render_template('index.html')
 
 @app.route("/<string:page_name>")
 def html_page(page_name):
@@ -40,6 +42,42 @@ def submit_form():
             return 'did not save to database'
     else:
         return 'something went wrong, try again'
+
+# Database models
+class Services(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    icon = db.Column(db.String, unique=True, nullable=False)
+    title = db.Column(db.String, unique=True, nullable=False)
+    description = db.Column(db.String, nullable=False)
+
+    def __init__(self, title, description):
+        self.title = title
+        self.description = description
+
+class Portfolio(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    icon = db.Column(db.String, unique=True, nullable=False)
+    title = db.Column(db.String, unique=True, nullable=False)
+    description = db.Column(db.String, nullable=False)
+
+    def __init__(self, title, description):
+        self.title = title
+        self.description = description
+
+class Blog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    image = db.Column(db.String, nullable=False)
+    title = db.Column(db.String, unique=True, nullable=False)
+    metadata = db.Column(db.String, unique=True, nullable=False)
+    link = db.Column(db.String, nullable=False)
+
+    def __init__(self, title, description):
+        self.title = title
+        self.description = description
+
+with app.app_context():
+    db.create_all()
+
 
 
 if __name__ == "__main__":
